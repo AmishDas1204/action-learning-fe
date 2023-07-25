@@ -20,6 +20,8 @@ import { MatCardModule } from '@angular/material/card';
 import { DeviceLoadComponent } from './device-load/device-load.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { DeviceloadInitServce } from './service/deviceload.init.service';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,9 +45,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     FormsModule,
     MatCardModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [DeviceloadInitServce],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
