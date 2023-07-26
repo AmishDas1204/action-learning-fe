@@ -5,6 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { DeviceloadInitServce } from '../service/deviceload.init.service';
 import { data } from 'jquery';
 import { Manufacturers } from '../ValueObject/manufacturers';
+import { IpServiceService } from '../service/ipservice.service';
 @Component({
   selector: 'app-home-bar',
   templateUrl: './home-bar.component.html',
@@ -29,7 +30,8 @@ export class HomeBarComponent {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file!: File; // Variable to store file
-  constructor(private deviceService: DeviceloadInitServce){
+  ipAddr:string = '';
+  constructor(private deviceService: DeviceloadInitServce, private ipProvider: IpServiceService){
     
   }
 
@@ -37,6 +39,8 @@ export class HomeBarComponent {
     console.log("Hello")
     this.mfgType$ = this.deviceService.getMfg()
     console.log(this.mfgType$)
+    this.getIP();
+    console.log(this.ipAddr)
   }
 
   handleFileInput(event:any) {
@@ -52,19 +56,17 @@ export class HomeBarComponent {
     
 // }
 
+getIP()  
+  {  
+    this.ipProvider.getIPAddress().subscribe((res:any)=>{  
+      console.log(res['ip'])
+      this.ipAddr=res.ip;  
+    });  
+  } 
+
 uploadFileToActivity() {
   this.loading = !this.loading;
   console.log(this.file);
-  this.deviceService.postFile(this.file).subscribe(
-      (event: any) => {
-          if (typeof (event) === 'object') {
-
-              // Short link via api response
-              this.shortLink = event.link;
-
-              this.loading = false; // Flag variable 
-          }
-      }
-  );
+  this.deviceService.postFile(this.file)
 }
 }

@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 @Injectable({providedIn: "root"})
 export class DeviceloadInitServce{
-
+    
     constructor( private http:HttpClient){
 
     }
@@ -18,6 +18,23 @@ export class DeviceloadInitServce{
         ).subscribe((res) =>{
             console.log(res)
         })
+    }
+
+    signin(username:string, password:string){
+        let isSuccess = false
+        const headers = new HttpHeaders({'mHeader':'HelloThere'})
+        this.http.post<{name:string}>('http://127.0.0.1:5000/signin',
+        {'email':username, 'password':password}).subscribe((data:any) =>{
+            console.log(data["res"])
+            if (data["res"] === "valid user"){
+                console.log("Success it is")
+                isSuccess = true
+            }
+            else{
+                isSuccess = false
+            }
+        })
+        return isSuccess
     }
     //Get Manufacturer name
     getMfg(){
@@ -50,12 +67,20 @@ export class DeviceloadInitServce{
         })
 
     }
-    postFile(fileToUpload: File): Observable<any> {
-        const endpoint = 'your-destination-url';
+    postFile(fileToUpload: File): void {
+        const endpoint = 'http://127.0.0.1:5000/upload';
         const formData: FormData = new FormData();
         const headers = new HttpHeaders({'mHeader':'HelloThere'})
-        formData.append('fileKey', fileToUpload, fileToUpload.name);
-        return this.http
-          .post(endpoint, formData, { headers: headers })
+        formData.append('file', fileToUpload, fileToUpload.name);
+         this.http
+          .post(endpoint, formData).subscribe(
+            (response) => {
+              alert('File uploaded successfully.');
+            },
+            (error) => {
+              alert('Error uploading file.');
+              console.error(error);
+            }
+          );
     }
 }
